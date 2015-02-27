@@ -1193,7 +1193,35 @@ class EMongoDocument extends EMongoModel
 		if($criteria instanceof EMongoCriteria){
 			$criteria = $criteria->getCondition();
 		}
-		return $this->getCollection()->find($criteria)->count();
+
+		$query = $this->mergeCriteria(isset($c['condition']) ? $c['condition'] : array(), $criteria);
+		$project = isset($c['project']) ? $c['project'] : array();
+
+		$record = null;
+		if(
+			$this->getDbConnection()->queryCachingCount > 0
+			&& $this->getDbConnection()->queryCachingDuration > 0
+			&& $this->getDbConnection()->queryCacheID !== false
+			&& ($cache = Yii::app()->getComponent($this->getDbConnection()->queryCacheID)) !== null
+		){
+			$this->getDbConnection()->queryCachingCount--;
+			$cacheKey = 'yii:dbquery' . $this->getDbConnection()->server . ':' . $this->getDbConnection()->db
+				. ':' . $this->getDbConnection()->getSerialisedQuery($query, $project) . ':'
+				. $this->getCollection() . ':count';
+			if(($result = $cache->get($cacheKey)) !== false){
+				Yii::trace('Query result found in cache', 'extensions.MongoYii.EMongoDocument');
+				$record = $result[0];
+			}
+		}
+
+		if ($record) {
+			return $record;
+		}
+		$record = $this->getCollection()->find($criteria)->count();
+
+		if(isset($cache, $cacheKey)){
+			$cache->set($cacheKey, $record, $this->getDbConnection()->queryCachingDuration, $this->getDbConnection()->queryCachingDependency);
+		}
 	}
 
 	/**
