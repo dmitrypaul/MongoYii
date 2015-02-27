@@ -800,6 +800,11 @@ class EMongoDocument extends EMongoModel
 		$query = $this->mergeCriteria(isset($c['condition']) ? $c['condition'] : array(), $criteria);
 		$project = $this->mergeCriteria(isset($c['project']) ? $c['project'] : array(), $fields);
 
+		Yii::trace(
+			'Executing findOne: '.'{$query:' . json_encode($query) . ',$project:' . json_encode($project) . '}',
+			'extensions.MongoYii.EMongoDocument'
+		);
+
 		$record = null;
 		if(
 			$this->getDbConnection()->queryCachingCount > 0 
@@ -817,10 +822,6 @@ class EMongoDocument extends EMongoModel
 		}
 
 		if ($record === null) {
-			Yii::trace(
-				'Executing findOne: '.'{$query:' . json_encode($query) . ',$project:' . json_encode($project) . '}',
-				'extensions.MongoYii.EMongoDocument'
-			);
 
 			if($this->getDbConnection()->enableProfiling){
 				Yii::beginProfile(
