@@ -1219,10 +1219,11 @@ class EMongoDocument extends EMongoModel
 			return $record;
 		}
 		$record = $this->getCollection()->find($criteria)->count();
-
 		if(isset($cache, $cacheKey)){
 			$cache->set($cacheKey, $record, $this->getDbConnection()->queryCachingDuration, $this->getDbConnection()->queryCachingDependency);
 		}
+
+		return $record;
 	}
 
 	/**
