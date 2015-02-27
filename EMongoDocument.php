@@ -1211,7 +1211,7 @@ class EMongoDocument extends EMongoModel
 				. $this->getCollection() . ':count';
 			if(($result = $cache->get($cacheKey)) !== false){
 				Yii::trace('Query result found in cache', 'extensions.MongoYii.EMongoDocument');
-				$record = $result[0];
+				$record = $result;
 			}
 		}
 
