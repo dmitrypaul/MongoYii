@@ -804,7 +804,8 @@ class EMongoDocument extends EMongoModel
 			'Executing findOne: '.'{$query:' . json_encode($query) . ',$project:' . json_encode($project) . '}',
 			'extensions.MongoYii.EMongoDocument'
 		);
-		
+
+		$record = null;
 		if(
 			$this->getDbConnection()->queryCachingCount > 0 
 			&& $this->getDbConnection()->queryCachingDuration > 0
@@ -818,7 +819,9 @@ class EMongoDocument extends EMongoModel
 				Yii::trace('Query result found in cache', 'extensions.MongoYii.EMongoDocument');
 				$record = $result[0];
 			}
-		}else{
+		}
+
+		if ($record === null) {
 			if($this->getDbConnection()->enableProfiling){
 				Yii::beginProfile(
 					'extensions.MongoYii.EMongoDocument.query.' . $this->collectionName() . '.findOne(' . '{$query:' . json_encode($query) . ',$project:' . json_encode($project) . '}' . ')',
