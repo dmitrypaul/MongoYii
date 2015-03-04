@@ -441,7 +441,7 @@ class EMongoModel extends CModel
 				->limit(isset($relation['limit']) ? $relation['limit'] : null);
 			
 			if(!isset($relation['cache']) || $relation['cache'] === true){
-				return $this->_related[$name] = iterator_to_array($cursor);
+				return $this->_related[$name] = iterator_to_array($cursor, false);
 			}
 		}
 		return $cursor; // FAIL SAFE
