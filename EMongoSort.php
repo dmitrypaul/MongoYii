@@ -83,16 +83,15 @@ class EMongoSort extends CSort
 		foreach($directions as $attribute => $descending){
 			$definition = $this->resolveAttribute($attribute);
 			if(is_array($definition)){
-				if(is_array($definition)){
-					if($descending){
-						foreach ($definition['desc'] as $definitionAttribute => $definitionDesc) {
-							$orders[$definitionAttribute] = $definitionDesc;
-						}
-					}else{
-						foreach ($definition['asc'] as $definitionAttribute => $definitionAsc) {
-							$orders[$definitionAttribute] = $definitionAsc;
-						}
+				if($descending){
+					foreach ($definition['desc'] as $definitionAttribute => $definitionDesc) {
+						$orders[$definitionAttribute] = $definitionDesc;
 					}
+				}else{
+					foreach ($definition['asc'] as $definitionAttribute => $definitionAsc) {
+						$orders[$definitionAttribute] = $definitionAsc;
+					}
+				}
 			}elseif($definition !== false){
 				$attribute = $definition;
 				if(isset($schema)){
