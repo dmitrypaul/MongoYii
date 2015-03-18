@@ -83,13 +83,16 @@ class EMongoSort extends CSort
 		foreach($directions as $attribute => $descending){
 			$definition = $this->resolveAttribute($attribute);
 			if(is_array($definition)){
-				// Atm only single cell sorting is allowed, this will change to allow you to define
-				// a true definition of multiple fields to sort when one sort field is triggered but atm that is not possible
-				if($descending){
-					$orders[$attribute] = isset($definition['desc']) ? -1 : 1;
-				}else{
-					$orders[$attribute] = isset($definition['asc']) ? 1 : -1;
-				}
+				if(is_array($definition)){
+					if($descending){
+						foreach ($definition['desc'] as $definitionAttribute => $definitionDesc) {
+							$orders[$definitionAttribute] = $definitionDesc;
+						}
+					}else{
+						foreach ($definition['asc'] as $definitionAttribute => $definitionAsc) {
+							$orders[$definitionAttribute] = $definitionAsc;
+						}
+					}
 			}elseif($definition !== false){
 				$attribute = $definition;
 				if(isset($schema)){
