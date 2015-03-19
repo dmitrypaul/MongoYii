@@ -197,13 +197,24 @@ class EMongoCriteria extends CComponent
 	}
 
 	/**
-	 * Adds an $or condition to the criteria, will overwrite other $or conditions
+	 * Adds an $and condition to the criteria
+	 * @param array $condition
+	 * @return self
+	 */
+	public function addAndCondition($condition)
+	{
+		$this->_condition['$and'][] = $condition;
+		return $this;
+	}
+
+	/**
+	 * Adds an $or condition to the criteria
 	 * @param array $condition
 	 * @return EMongoCriteria
 	 */
 	public function addOrCondition($condition)
 	{
-		$this->_condition['$and'][] = array('$or' => $condition);
+		$this->addAndCondition(array('$or' => $condition));
 		return $this;
 	}
 
